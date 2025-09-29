@@ -13,9 +13,29 @@ TypeScript types are **automatically regenerated** when you run:
 
 **You don't need to do anything!** The types will be in sync.
 
-## 🛠️ Manual Type Regeneration (if needed)
+### For All Services (from project root)
+```bash
+npm run generate-proto
+```
 
-### Node.js Service
+This will regenerate proto types for:
+- ✅ Node.js TypeScript service
+- ✅ Python gRPC service
+
+## 🛠️ Manual Type Regeneration
+
+### Generate for All Services (Recommended)
+
+From the project root:
+```bash
+npm run generate-proto
+```
+
+This runs the central script that generates types for both services.
+
+### Node.js Service Only
+
+If you only need to regenerate Node.js types:
 
 ```bash
 cd services/backend-nodejs
@@ -27,7 +47,9 @@ This will:
 2. Generate fresh TypeScript types from the proto file
 3. Types automatically convert snake_case → camelCase
 
-### Python Service
+### Python Service Only
+
+If you only need to regenerate Python types:
 
 ```bash
 cd services/backend-python
@@ -68,13 +90,14 @@ npm run generate-proto
    }
    ```
 
-2. **For Node.js** - Types regenerate automatically:
+2. **Regenerate types for all services** (from project root):
    ```bash
-   cd services/backend-nodejs
-   npm run dev  # Types are regenerated automatically
+   npm run generate-proto
    ```
    
-   Then add the method to `src/services/user.service.ts`:
+   This will regenerate types for both Node.js and Python services automatically!
+
+3. **For Node.js** - Add the method to `services/backend-nodejs/src/services/user.service.ts`:
    ```typescript
    async deleteUser(userId: number): Promise<boolean> {
      const client = this.grpcClient.getClient();
@@ -87,14 +110,7 @@ npm run generate-proto
    }
    ```
 
-3. **For Python** - Regenerate and implement:
-   ```bash
-   cd services/backend-python
-   # Regenerate proto files (if not automated)
-   python -m grpc_tools.protoc ...
-   ```
-   
-   Then implement in `src/api/example_service.py`:
+4. **For Python** - Implement in `services/backend-python/src/api/example_service.py`:
    ```python
    def DeleteUser(self, request, context):
        user_id = request.user_id
@@ -103,6 +119,8 @@ npm run generate-proto
            return DeleteUserResponse(success=True)
        return DeleteUserResponse(success=False)
    ```
+
+5. **Test both services** to verify the changes work correctly.
 
 ### Modifying an Existing Message
 
@@ -118,12 +136,14 @@ npm run generate-proto
    }
    ```
 
-2. **Node.js** - Types update automatically on next run:
+2. **Regenerate types** (from project root):
    ```bash
-   npm run dev  # User type now includes 'phone?: string'
+   npm run generate-proto
    ```
+   
+   This updates types for both services!
 
-3. **Python** - Regenerate proto files and update code
+3. **Update implementations** in both Node.js and Python to handle the new field
 
 ## ⚠️ Important Notes
 
@@ -175,11 +195,13 @@ cat proto_generated/example_service_pb2.py
 
 ## 🚀 Quick Reference
 
-| Action | Node.js Command | Auto? |
-|--------|----------------|-------|
-| Run dev | `npm run dev` | ✅ Yes |
-| Build | `npm run build` | ✅ Yes |
-| Manual regen | `npm run generate-proto` | ❌ No |
+| Action | Command | Auto? | Scope |
+|--------|---------|-------|-------|
+| **Regen all services** | `npm run generate-proto` (from root) | ❌ Manual | Both |
+| Run Node.js dev | `npm run dev` (in backend-nodejs) | ✅ Auto | Node.js |
+| Build Node.js | `npm run build` (in backend-nodejs) | ✅ Auto | Node.js |
+| Regen Node.js only | `npm run generate-proto` (in backend-nodejs) | ❌ Manual | Node.js |
+| Regen Python only | See Python Service section | ❌ Manual | Python |
 
 ## 📂 Generated Files Location
 
