@@ -9,11 +9,10 @@ from concurrent import futures
 import grpc
 
 # Import our service implementation
-from api.example_service import ExampleServiceServicer
+from src.api.example_service import ExampleServiceServicer
 
 # Import generated gRPC code
-sys.path.append('proto_generated')
-import example_service_pb2_grpc
+from proto_generated import example_service_pb2_grpc
 
 # Configure logging
 logging.basicConfig(

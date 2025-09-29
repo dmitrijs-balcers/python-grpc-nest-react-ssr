@@ -83,7 +83,19 @@ if [ -d "$PYTHON_SERVICE_DIR" ]; then
             -I"$PROTO_DIR" \
             --python_out=proto_generated \
             --grpc_python_out=proto_generated \
+            --pyi_out=proto_generated \
             "$PROTO_DIR"/*.proto; then
+            
+            # Fix imports in generated grpc files to use relative imports
+            echo -e "${BLUE}   🔧 Fixing imports to use relative imports...${NC}"
+            for grpc_file in proto_generated/*_pb2_grpc.py; do
+                if [ -f "$grpc_file" ]; then
+                    # Replace absolute imports with relative imports
+                    sed -i.bak 's/^import \([a-zA-Z0-9_]*_pb2\) as/from . import \1 as/g' "$grpc_file"
+                    rm -f "${grpc_file}.bak"
+                fi
+            done
+            
             echo -e "${GREEN}   ✅ Python proto files generated successfully${NC}"
         else
             echo -e "${RED}   ❌ Failed to generate Python proto files${NC}"

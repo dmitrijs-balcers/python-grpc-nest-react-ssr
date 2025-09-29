@@ -5,10 +5,8 @@ import logging
 import sys
 import grpc
 
-# Add proto_generated to path
-sys.path.append('proto_generated')
-import example_service_pb2
-import example_service_pb2_grpc
+from proto_generated import example_service_pb2
+from proto_generated import example_service_pb2_grpc
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)

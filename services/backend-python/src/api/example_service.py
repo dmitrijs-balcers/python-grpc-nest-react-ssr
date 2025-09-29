@@ -6,12 +6,8 @@ import grpc
 from concurrent import futures
 
 # Import generated gRPC code
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../proto_generated'))
-
-import example_service_pb2
-import example_service_pb2_grpc
+from proto_generated import example_service_pb2
+from proto_generated import example_service_pb2_grpc
 
 logger = logging.getLogger(__name__)
 

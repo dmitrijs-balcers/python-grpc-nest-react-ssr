@@ -4,7 +4,10 @@ version = "0.1.0"
 description = "Python gRPC microservice with database integration"
 authors = ["Your Name <your.email@example.com>"]
 readme = "README.md"
-packages = [{include = "src"}]
+packages = [
+    {include = "src"},
+    {include = "proto_generated"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.9"
