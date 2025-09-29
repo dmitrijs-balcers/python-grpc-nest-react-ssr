@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { promisify } from 'util';
 import GrpcClient from '../grpc/client';
 import { GetUserRequest } from '../grpc/generated/example/GetUserRequest';
@@ -11,12 +12,9 @@ import { ListUsersResponse__Output } from '../grpc/generated/example/ListUsersRe
 /**
  * User Service - Provides high-level methods to interact with the gRPC backend
  */
+@Injectable()
 export class UserService {
-  private grpcClient: GrpcClient;
-
-  constructor(grpcClient: GrpcClient) {
-    this.grpcClient = grpcClient;
-  }
+  constructor(private readonly grpcClient: GrpcClient) {}
 
   /**
    * Get a user by ID

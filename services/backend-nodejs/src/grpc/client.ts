@@ -1,3 +1,4 @@
+import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import * as grpc from '@grpc/grpc-js';
 import * as protoLoader from '@grpc/proto-loader';
 import path from 'path';
@@ -7,12 +8,21 @@ import { ExampleServiceClient } from './generated/example/ExampleService';
 /**
  * gRPC Client for connecting to the Python backend service
  */
-class GrpcClient {
+@Injectable()
+export class GrpcClient implements OnModuleInit, OnModuleDestroy {
   private client: ExampleServiceClient | null = null;
   private readonly serverAddress: string;
 
-  constructor(serverAddress: string = 'localhost:50051') {
-    this.serverAddress = serverAddress;
+  constructor() {
+    this.serverAddress = process.env.GRPC_SERVER_ADDRESS || 'localhost:50051';
+  }
+
+  /**
+   * Initialize the gRPC client by loading proto and creating connection
+   * Called automatically when the module is initialized
+   */
+  async onModuleInit(): Promise<void> {
+    await this.initialize();
   }
 
   /**
@@ -60,6 +70,14 @@ class GrpcClient {
    */
   isInitialized(): boolean {
     return this.client !== null;
+  }
+
+  /**
+   * Close the client connection
+   * Called automatically when the module is destroyed
+   */
+  onModuleDestroy(): void {
+    this.close();
   }
 
   /**

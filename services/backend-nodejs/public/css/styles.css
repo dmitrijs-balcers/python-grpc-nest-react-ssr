@@ -1,0 +1,189 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.header {
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.error-banner {
+  background: #fee;
+  border: 2px solid #fcc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 2rem;
+  color: #c33;
+}
+
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.users-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.badge {
+  padding: 0.5rem 1rem;
+  background: #667eea;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.users-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.user-card {
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+}
+
+.user-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.user-info h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.user-id {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.user-details {
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+}
+
+.detail {
+  margin: 0.5rem 0;
+  color: #334155;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+
+.detail span {
+  margin-left: 0.5rem;
+}
+
+.timestamp {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+  color: #94a3b8;
+  border: 2px dashed #e2e8f0;
+  border-radius: 12px;
+}
+
+.empty-state p {
+  font-size: 1.2rem;
+}
+
+.footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+  text-align: center;
+  color: #94a3b8;
+}
+
+.footer-note {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .users-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}

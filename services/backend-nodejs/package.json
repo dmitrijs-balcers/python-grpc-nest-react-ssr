@@ -6,9 +6,11 @@
   "scripts": {
     "prebuild": "npm run generate-proto",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/main.js",
+    "start:dev": "ts-node src/main.ts",
     "predev": "npm run generate-proto",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node src/main.ts",
+    "dev:grpc-client": "ts-node src/grpc-client.ts",
     "generate-proto": "npm run proto:clean && npm run proto:generate",
     "proto:clean": "rm -rf src/grpc/generated && mkdir -p src/grpc/generated",
     "proto:generate": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=src/grpc/generated ../../shared/proto/example_service.proto",
@@ -25,11 +27,22 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.14.0",
     "@grpc/proto-loader": "^0.8.0",
-    "google-protobuf": "^4.0.0"
+    "@nestjs/common": "^11.1.6",
+    "@nestjs/core": "^11.1.6",
+    "@nestjs/microservices": "^11.1.6",
+    "@nestjs/platform-express": "^11.1.6",
+    "ejs": "^3.1.10",
+    "google-protobuf": "^4.0.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
     "@types/google-protobuf": "^3.15.12",
     "@types/node": "^20.19.18",
+    "@types/react": "^19.1.15",
+    "@types/react-dom": "^19.1.9",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.2"
   }

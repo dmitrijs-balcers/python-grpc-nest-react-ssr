@@ -9,7 +9,7 @@ async function main() {
   console.log('======================================\n');
 
   // Initialize gRPC client
-  const grpcClient = new GrpcClient('localhost:50051');
+  const grpcClient = new GrpcClient();
   
   try {
     await grpcClient.initialize();

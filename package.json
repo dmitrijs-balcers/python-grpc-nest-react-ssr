@@ -11,6 +11,7 @@
     "install:frontend": "cd services/frontend-typescript && npm install",
     "dev:backend": "cd services/backend-python && poetry run python src/main.py",
     "dev:nodejs": "cd services/backend-nodejs && npm run dev",
+    "dev:nodejs-grpc": "cd services/backend-nodejs && npm run dev:grpc-client",
     "dev:frontend": "cd services/frontend-typescript && npm run dev",
     "test:backend": "cd services/backend-python && poetry run pytest",
     "test:nodejs": "cd services/backend-nodejs && npm test",
