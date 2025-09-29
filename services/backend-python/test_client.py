@@ -5,6 +5,9 @@ import logging
 import sys
 import grpc
 
+# Setup protovalidate module aliases
+from src.utils import protovalidate_setup  # noqa: F401
+
 from proto_generated import example_service_pb2
 from proto_generated import example_service_pb2_grpc
 

@@ -78,28 +78,86 @@ if [ -d "$PYTHON_SERVICE_DIR" ]; then
     if command -v poetry &> /dev/null; then
         echo -e "${BLUE}   🔄 Generating Python protobuf files...${NC}"
         
-        # Generate Python proto files
-        if poetry run python -m grpc_tools.protoc \
-            -I"$PROTO_DIR" \
-            --python_out=proto_generated \
-            --grpc_python_out=proto_generated \
-            --pyi_out=proto_generated \
-            "$PROTO_DIR"/*.proto; then
+        # Use buf to export dependencies (protovalidate) and generate files
+        if command -v buf &> /dev/null; then
+            echo -e "${BLUE}   📦 Using buf to export protovalidate dependencies...${NC}"
             
-            # Fix imports in generated grpc files to use relative imports
-            echo -e "${BLUE}   🔧 Fixing imports to use relative imports...${NC}"
-            for grpc_file in proto_generated/*_pb2_grpc.py; do
-                if [ -f "$grpc_file" ]; then
-                    # Replace absolute imports with relative imports
-                    sed -i.bak 's/^import \([a-zA-Z0-9_]*_pb2\) as/from . import \1 as/g' "$grpc_file"
-                    rm -f "${grpc_file}.bak"
-                fi
-            done
+            # Export buf dependencies to a temporary directory
+            BUF_DEPS_DIR="proto_generated/buf_deps"
+            rm -rf "$BUF_DEPS_DIR"
+            mkdir -p "$BUF_DEPS_DIR"
             
-            echo -e "${GREEN}   ✅ Python proto files generated successfully${NC}"
+            # Export buf modules
+            cd "$PROTO_DIR"
+            buf export buf.build/bufbuild/protovalidate -o "$PYTHON_SERVICE_DIR/$BUF_DEPS_DIR" || echo "   ⚠️  Could not export protovalidate"
+            
+            cd "$PYTHON_SERVICE_DIR"
+            
+            # Generate Python proto files with buf dependencies
+            if poetry run python -m grpc_tools.protoc \
+                -I"$PROTO_DIR" \
+                -I"$BUF_DEPS_DIR" \
+                --python_out=proto_generated \
+                --grpc_python_out=proto_generated \
+                --pyi_out=proto_generated \
+                "$PROTO_DIR"/*.proto; then
+                
+                # Generate buf/validate proto files
+                echo -e "${BLUE}   📝 Generating buf/validate proto files...${NC}"
+                poetry run python -m grpc_tools.protoc \
+                    -I"$PROTO_DIR" \
+                    --python_out=proto_generated \
+                    --pyi_out=proto_generated \
+                    "$PROTO_DIR"/buf/validate/validate.proto || echo "   ⚠️  Could not generate validate protos"
+                
+                # Create __init__.py files for buf package
+                touch proto_generated/buf/__init__.py
+                touch proto_generated/buf/validate/__init__.py
+                
+                # Fix imports in generated grpc files to use relative imports
+                echo -e "${BLUE}   🔧 Fixing imports to use relative imports...${NC}"
+                for grpc_file in proto_generated/*_pb2_grpc.py; do
+                    if [ -f "$grpc_file" ]; then
+                        # Replace absolute imports with relative imports
+                        sed -i.bak 's/^import \([a-zA-Z0-9_]*_pb2\) as/from . import \1 as/g' "$grpc_file"
+                        rm -f "${grpc_file}.bak"
+                    fi
+                done
+                
+                # Clean up buf dependencies directory
+                rm -rf "$BUF_DEPS_DIR"
+                
+                echo -e "${GREEN}   ✅ Python proto files generated successfully${NC}"
+            else
+                echo -e "${RED}   ❌ Failed to generate Python proto files${NC}"
+                exit 1
+            fi
         else
-            echo -e "${RED}   ❌ Failed to generate Python proto files${NC}"
-            exit 1
+            echo -e "${BLUE}   ⚠️  buf not found, generating without protovalidate support${NC}"
+            
+            # Fallback to basic generation without buf
+            if poetry run python -m grpc_tools.protoc \
+                -I"$PROTO_DIR" \
+                --python_out=proto_generated \
+                --grpc_python_out=proto_generated \
+                --pyi_out=proto_generated \
+                "$PROTO_DIR"/*.proto; then
+                
+                # Fix imports in generated grpc files to use relative imports
+                echo -e "${BLUE}   🔧 Fixing imports to use relative imports...${NC}"
+                for grpc_file in proto_generated/*_pb2_grpc.py; do
+                    if [ -f "$grpc_file" ]; then
+                        # Replace absolute imports with relative imports
+                        sed -i.bak 's/^import \([a-zA-Z0-9_]*_pb2\) as/from . import \1 as/g' "$grpc_file"
+                        rm -f "${grpc_file}.bak"
+                    fi
+                done
+                
+                echo -e "${GREEN}   ✅ Python proto files generated successfully${NC}"
+            else
+                echo -e "${RED}   ❌ Failed to generate Python proto files${NC}"
+                exit 1
+            fi
         fi
     else
         echo -e "${RED}   ⚠️  Poetry not found, skipping Python proto generation${NC}"

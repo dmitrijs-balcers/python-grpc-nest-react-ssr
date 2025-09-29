@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package example;
 
+import "buf/validate/validate.proto";
+
 // Example service definition
 service ExampleService {
   // Get a user by ID
@@ -16,7 +18,7 @@ service ExampleService {
 
 // Request/Response messages
 message GetUserRequest {
-  int32 user_id = 1;
+  int32 user_id = 1 [(buf.validate.field).int32.gt = 0];
 }
 
 message GetUserResponse {
@@ -24,8 +26,11 @@ message GetUserResponse {
 }
 
 message CreateUserRequest {
-  string name = 1;
-  string email = 2;
+  string name = 1 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 100
+  }];
+  string email = 2 [(buf.validate.field).string.email = true];
 }
 
 message CreateUserResponse {
@@ -33,8 +38,11 @@ message CreateUserResponse {
 }
 
 message ListUsersRequest {
-  int32 page = 1;
-  int32 page_size = 2;
+  int32 page = 1 [(buf.validate.field).int32.gte = 1];
+  int32 page_size = 2 [(buf.validate.field).int32 = {
+    gte: 1,
+    lte: 100
+  }];
 }
 
 message ListUsersResponse {
@@ -44,9 +52,13 @@ message ListUsersResponse {
 
 // Data models
 message User {
-  int32 id = 1;
-  string name = 2;
-  string email = 3;
-  int64 created_at = 4;
-  int64 updated_at = 5;
+  int32 id = 1 [(buf.validate.field).int32.gt = 0];
+  string name = 2 [(buf.validate.field).string = {
+    min_len: 1,
+    max_len: 100
+  }];
+  string surname = 3 [(buf.validate.field).string.max_len = 100];
+  string email = 4 [(buf.validate.field).string.email = true];
+  int64 created_at = 5 [(buf.validate.field).int64.gte = 0];
+  int64 updated_at = 6 [(buf.validate.field).int64.gte = 0];
 }

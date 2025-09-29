@@ -51,11 +51,7 @@ class ExampleServiceServicer(example_service_pb2_grpc.ExampleServiceServicer):
         """Create a new user."""
         logger.info(f"CreateUser called with name: {request.name}, email: {request.email}")
         
-        # Validate input
-        if not request.name or not request.email:
-            context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
-            context.set_details("Name and email are required")
-            return example_service_pb2.CreateUserResponse()
+        # Validation is now handled by ValidationInterceptor
         
         # Check if email already exists
         for user in self.users.values():
@@ -85,9 +81,10 @@ class ExampleServiceServicer(example_service_pb2_grpc.ExampleServiceServicer):
         """List users with pagination."""
         logger.info(f"ListUsers called with page: {request.page}, page_size: {request.page_size}")
         
-        # Default pagination values
-        page = max(1, request.page) if request.page > 0 else 1
-        page_size = min(max(1, request.page_size), 100) if request.page_size > 0 else 10
+        # Validation is now handled by ValidationInterceptor
+        # Default values if not set
+        page = request.page if request.page > 0 else 1
+        page_size = request.page_size if request.page_size > 0 else 10
         
         # Get all users as a list
         all_users = list(self.users.values())

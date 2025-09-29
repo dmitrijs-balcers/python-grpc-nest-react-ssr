@@ -8,8 +8,12 @@ from concurrent import futures
 
 import grpc
 
+# Setup protovalidate module aliases BEFORE importing proto files
+from src.utils import protovalidate_setup  # noqa: F401
+
 # Import our service implementation
 from src.api.example_service import ExampleServiceServicer
+from src.interceptors import ValidationInterceptor
 
 # Import generated gRPC code
 from proto_generated import example_service_pb2_grpc
@@ -24,8 +28,12 @@ logger = logging.getLogger(__name__)
 
 def serve():
     """Start the gRPC server."""
-    # Create gRPC server
-    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    # Create gRPC server with validation interceptor
+    interceptors = [ValidationInterceptor()]
+    server = grpc.server(
+        futures.ThreadPoolExecutor(max_workers=10),
+        interceptors=interceptors
+    )
     
     # Add our service to the server
     example_service_servicer = ExampleServiceServicer()
