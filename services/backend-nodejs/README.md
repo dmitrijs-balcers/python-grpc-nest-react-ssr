@@ -2,6 +2,14 @@
 
 This service connects to the Python gRPC backend and provides a TypeScript interface for interacting with the ExampleService.
 
+## 🔄 Proto File Changes?
+
+**Types regenerate automatically** when you run `npm run dev` or `npm run build`!
+
+For manual regeneration: `npm run generate-proto`
+
+📖 **Detailed guide:** [`../../docs/PROTO_CHANGES_GUIDE.md`](../../docs/PROTO_CHANGES_GUIDE.md)
+
 ## Features
 
 - ✅ **Auto-generated TypeScript types** from proto files
@@ -117,6 +125,19 @@ npm run generate-proto
 ```
 
 The generated files are located in `src/grpc/generated/` and should **NOT** be manually edited.
+
+### When Proto Files Change
+
+**Good news:** Types regenerate automatically when you run `npm run dev` or `npm run build`!
+
+If you need to manually regenerate after a proto change:
+```bash
+npm run generate-proto
+```
+
+⚠️ **Important:** Proto fields use `snake_case` (e.g., `user_id`) but are automatically converted to `camelCase` in TypeScript (e.g., `userId`).
+
+See [`../../docs/PROTO_CHANGES_GUIDE.md`](../../docs/PROTO_CHANGES_GUIDE.md) for detailed instructions on handling proto file changes.
 
 ## API Reference
 
