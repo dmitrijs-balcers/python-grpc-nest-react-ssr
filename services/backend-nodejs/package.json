@@ -1,0 +1,36 @@
+{
+  "name": "backend-nodejs",
+  "version": "1.0.0",
+  "description": "Node.js TypeScript gRPC client service",
+  "main": "dist/index.js",
+  "scripts": {
+    "prebuild": "npm run generate-proto",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "predev": "npm run generate-proto",
+    "dev": "ts-node src/index.ts",
+    "generate-proto": "npm run proto:clean && npm run proto:generate",
+    "proto:clean": "rm -rf src/grpc/generated && mkdir -p src/grpc/generated",
+    "proto:generate": "proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=src/grpc/generated ../../shared/proto/example_service.proto",
+    "lint": "tsc --noEmit",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "keywords": [
+    "grpc",
+    "typescript",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.14.0",
+    "@grpc/proto-loader": "^0.8.0",
+    "google-protobuf": "^4.0.0"
+  },
+  "devDependencies": {
+    "@types/google-protobuf": "^3.15.12",
+    "@types/node": "^20.19.18",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

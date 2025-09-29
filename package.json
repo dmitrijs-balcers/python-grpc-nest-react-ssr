@@ -7,10 +7,13 @@
     "generate-proto": "./scripts/generate-proto.sh",
     "setup-dev": "./scripts/setup-dev.sh",
     "install:backend": "cd services/backend-python && poetry install",
+    "install:nodejs": "cd services/backend-nodejs && npm install",
     "install:frontend": "cd services/frontend-typescript && npm install",
     "dev:backend": "cd services/backend-python && poetry run python src/main.py",
+    "dev:nodejs": "cd services/backend-nodejs && npm run dev",
     "dev:frontend": "cd services/frontend-typescript && npm run dev",
     "test:backend": "cd services/backend-python && poetry run pytest",
+    "test:nodejs": "cd services/backend-nodejs && npm test",
     "test:frontend": "cd services/frontend-typescript && npm test",
     "test:grpc": "cd services/backend-python && poetry run python test_client.py",
     "health:backend": "cd services/backend-python && poetry run python health_check.py"
