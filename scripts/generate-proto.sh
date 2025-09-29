@@ -73,46 +73,41 @@ fi
 
 cd ../..
 
-# Generate TypeScript code (simplified approach)
-echo -e "${YELLOW}📝 Generating TypeScript gRPC code...${NC}"
+# Generate TypeScript gRPC-Web code  
+echo -e "${YELLOW}📝 Generating TypeScript gRPC-Web code...${NC}"
 
-# Check if grpc-tools is available
-if ! command -v npx &> /dev/null; then
-    echo -e "${RED}❌ npx not found. Please install Node.js${NC}"
+# Check if protoc is available
+if ! command -v protoc &> /dev/null; then
+    echo -e "${RED}❌ protoc not found. Please install Protocol Buffers compiler${NC}"
+    echo -e "${YELLOW}💡 Install protoc:${NC}"
+    echo -e "${YELLOW}   MacOS: brew install protobuf${NC}"
+    echo -e "${YELLOW}   Ubuntu: apt-get install protobuf-compiler${NC}"
     exit 1
 fi
 
-# Generate JavaScript/TypeScript code using grpc-tools
-npx grpc_tools_node_protoc \
-    --proto_path="$PROTO_DIR" \
-    --js_out=import_style=commonjs,binary:"$TS_OUT_DIR" \
-    --grpc_out=grpc_js:"$TS_OUT_DIR" \
+# Check if frontend directory exists and has node_modules
+if [ ! -d "services/frontend-typescript/node_modules" ]; then
+    echo -e "${YELLOW}📦 Installing frontend dependencies first...${NC}"
+    cd services/frontend-typescript
+    npm install
+    cd ../..
+fi
+
+# Generate gRPC-Web code for TypeScript
+protoc -I="$PROTO_DIR" \
+    --js_out=import_style=commonjs:"$TS_OUT_DIR" \
+    --grpc-web_out=import_style=typescript,mode=grpcwebtext:"$TS_OUT_DIR" \
     "$PROTO_DIR"/*.proto
 
 if [ $? -eq 0 ]; then
-    echo -e "${GREEN}✅ TypeScript gRPC code generated successfully${NC}"
+    echo -e "${GREEN}✅ TypeScript gRPC-Web code generated successfully${NC}"
 else
-    echo -e "${RED}❌ Failed to generate TypeScript gRPC code${NC}"
-    echo -e "${YELLOW}💡 Make sure grpc-tools is installed: npm install grpc-tools${NC}"
+    echo -e "${RED}❌ Failed to generate TypeScript gRPC-Web code${NC}"
+    echo -e "${YELLOW}💡 Make sure protoc-gen-grpc-web is installed:${NC}"
+    echo -e "${YELLOW}   Download from: https://github.com/grpc/grpc-web/releases${NC}"
+    echo -e "${YELLOW}   Or install via npm: npm install -g protoc-gen-grpc-web${NC}"
     exit 1
 fi
-
-# Create a simple TypeScript declaration file for the generated code
-echo -e "${YELLOW}📝 Creating TypeScript declarations...${NC}"
-for proto_file in "$PROTO_DIR"/*.proto; do
-    basename_file=$(basename "$proto_file" .proto)
-    cat > "$TS_OUT_DIR/${basename_file}.d.ts" << EOF
-// Auto-generated TypeScript declarations for ${basename_file}.proto
-// Generated on $(date)
-
-import * as grpc from '@grpc/grpc-js';
-import * as google_protobuf from 'google-protobuf';
-
-// Import the generated JavaScript files
-export * from './${basename_file}_pb';
-export * from './${basename_file}_grpc_pb';
-EOF
-done
 
 echo -e "${GREEN}✅ gRPC code generation completed!${NC}"
 echo -e "${GREEN}📁 Python files: $PYTHON_OUT_DIR${NC}"

@@ -3,7 +3,7 @@ import { grpcClient, User } from '../services/grpcClient';
 
 interface UserDetailsProps {
   userId?: number;
-  user?: User;
+  user?: User | null;
 }
 
 export const UserDetails: React.FC<UserDetailsProps> = ({ userId, user: initialUser }) => {

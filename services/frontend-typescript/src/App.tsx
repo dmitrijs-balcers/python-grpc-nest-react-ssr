@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { UserList } from './components/UserList'
 import { CreateUser } from './components/CreateUser'
 import { UserDetails } from './components/UserDetails'
