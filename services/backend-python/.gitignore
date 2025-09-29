@@ -51,13 +51,16 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 
-# Virtual environments
+# Poetry virtual environments (Poetry manages these)
+# Don't ignore poetry.lock - it should be committed
+.venv/
+
+# Legacy virtual environments (if any)
 venv/
 env/
 ENV/
 env.bak/
 venv.bak/
-.venv/
 
 # Spyder project settings
 .spyderproject
@@ -103,3 +106,6 @@ instance/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# Pre-commit
+.pre-commit-config.yaml

@@ -1,0 +1,73 @@
+[tool.poetry]
+name = "backend-python"
+version = "0.1.0"
+description = "Python gRPC microservice with database integration"
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+sqlalchemy = "^2.0.23"
+alembic = "^1.12.1"
+pydantic = "^2.4.2"
+python-dotenv = "^1.0.0"
+psycopg2-binary = "^2.9.7"
+grpcio = "^1.75.1"
+grpcio-tools = "^1.75.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.21.1"
+pytest-cov = "^4.1.0"
+black = "^23.9.1"
+isort = "^5.12.0"
+flake8 = "^6.1.0"
+mypy = "^1.6.1"
+pre-commit = "^3.5.0"
+
+[tool.poetry.scripts]
+server = "src.main:main"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py39']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+  | proto_generated
+)/
+'''
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
+line_length = 88
+skip = ["proto_generated"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+exclude = ["proto_generated/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "--cov=src --cov-report=html --cov-report=term-missing"

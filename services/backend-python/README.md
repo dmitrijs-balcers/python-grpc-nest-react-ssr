@@ -24,23 +24,39 @@ proto_generated/   # Generated gRPC code (auto-generated)
 ## 🛠️ Setup
 
 ```bash
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # or `venv\Scripts\activate` on Windows
+# Install dependencies with Poetry
+poetry install
 
-# Install dependencies
-pip install -r requirements.txt
+# Activate virtual environment
+poetry shell
 
 # Run migrations
-python -m alembic upgrade head
+poetry run alembic upgrade head
 
 # Start server
-python src/main.py
+poetry run python src/main.py
 ```
 
 ## 🔧 Development
 
-- Use `requirements.txt` for dependencies
+- Use `Poetry` for dependency management
 - Use `alembic` for database migrations
 - Use `pytest` for testing
 - Use `grpcio-tools` for proto compilation
+
+## 📦 Common Commands
+
+```bash
+# Add new dependency
+poetry add <package>
+
+# Add development dependency
+poetry add --group dev <package>
+
+# Run tests
+poetry run pytest
+
+# Run linting
+poetry run black src/
+poetry run isort src/
+```
