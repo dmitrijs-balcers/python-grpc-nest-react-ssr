@@ -1,0 +1,20 @@
+# Docker .gitignore
+
+# Docker build context files that shouldn't be included
+.dockerignore
+
+# Docker volumes data
+volumes/
+data/
+
+# Docker compose override files (for local development)
+docker-compose.override.yml
+docker-compose.local.yml
+
+# Docker environment files (may contain secrets)
+.env.docker
+.env.production
+
+# Build artifacts
+build/
+dist/
