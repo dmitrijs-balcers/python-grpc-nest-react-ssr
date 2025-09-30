@@ -13,13 +13,13 @@ NestJS + React SSR frontend with Python gRPC backend.
 ```bash
 # 1. Install dependencies
 npm run install:backend
-npm run install:nodejs
+npm run install:frontend
 
 # 2. Start Python gRPC server (Terminal 1)
 npm run dev:backend
 
 # 3. Start NestJS + React SSR app (Terminal 2)
-npm run dev:nodejs
+npm run dev:frontend
 ```
 
 Open http://localhost:3000
@@ -41,9 +41,9 @@ Open http://localhost:3000
 ```bash
 npm run generate-proto      # Regenerate proto types
 npm run dev:backend          # Start Python server
-npm run dev:nodejs           # Start NestJS app
+npm run dev:frontend         # Start NestJS + React SSR app
 npm run test:backend         # Test Python service
-npm run test:nodejs          # Test Node.js service
+npm run test:frontend        # Test NestJS service
 ```
 
 ## Project Structure
